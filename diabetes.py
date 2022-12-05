@@ -16,8 +16,10 @@ for col in df.columns:
 corr = df.corr()
 high_corr = corr.index[abs(corr['class'])>0.1]
 
+high_corr.drop('class')
+
 from sklearn.model_selection import train_test_split
-X = df[high_corr]
+X = df[high_corr.drop('class')]
 y = df['class']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
@@ -43,3 +45,7 @@ print('Precision: ', precision_score(y_test, rc_prediction))
 print('Accuracy: ', accuracy_score(y_test, prediction))
 print('Recall: ', recall_score(y_test, prediction))
 print('Precision: ', precision_score(y_test, prediction))
+
+import joblib
+
+joblib.dump(rc, 'models/diabetes_lr.pkl', compress=3)
